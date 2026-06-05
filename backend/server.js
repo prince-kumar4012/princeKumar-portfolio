@@ -16,17 +16,18 @@ await seedAdmin();
 
 const app = express();
 
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:5174",
+  process.env.CLIENT_URL,
+].filter(Boolean);
+
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "http://localhost:5174",
-      process.env.CLIENT_URL,
-    ],
+    origin: allowedOrigins,
     credentials: true,
   })
 );
-
 
 app.use(express.json());
 app.use(morgan("dev"));
@@ -40,10 +41,11 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
-if (process.env.NODE_ENV !== "production") {
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-  });
-}
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
+
+export default app;
+
 
 export default app;
